@@ -34,6 +34,22 @@ jobs:
       run: |
         aws eks update-kubeconfig --name sun-3tier-cluster --region ${{ secrets.AWS_REGION }}
 
+    - name: Set up SSH key
+      run: |
+        # Create the SSH directory
+        mkdir -p ~/.ssh
+        # Add the private key to the SSH agent (from GitHub secret)
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa  # Set appropriate permissions for the private key
+        # Add GitHub to known hosts to prevent host verification issues
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+    # Step 2: Clone the repository using SSH
+    - name: Clone repository
+      run: |
+        git clone git@github.com:Sunithadodda/3tier_app_aws_eks_cluster.git
+       
+
     # Step 5: Deploy Kubernetes manifests
     - name: Apply Kubernetes manifests
       run: |
