@@ -41,7 +41,7 @@ jobs:
         mkdir -p ~/.ssh
         ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
 
-    - name: Clone the repo
+    - name: Clone the repo and deploy manifests to EKS
       run: |
         ssh -i ~/.ssh/GFS-kp.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
           if [ ! -d "3tier_app_aws_eks_cluster/.git" ]; then
@@ -51,19 +51,18 @@ jobs:
             git fetch origin
             git checkout main  # or whichever branch you want to track
           fi
-        EOF
 
-    - name: Deploy manifests to EKS
-      run: |
-        cd 3tier_app_aws_eks_cluster
-        kubectl apply -f backend-deployment.yml
-        kubectl apply -f backend-service.yml
-        kubectl apply -f database-deployment.yml
-        kubectl apply -f database-service.yml
-        kubectl apply -f docker-compose.yml
-        kubectl apply -f frontend-deployment.yml
-        kubectl apply -f frontend-ingress.yml
-        kubectl apply -f frontend-lb-service.yml
-        kubectl apply -f frontend-service.yml
-        kubectl apply -f postgres-pv.yml
-        kubectl apply -f postgres-pvc.yml
+          # Change into the cloned directory and apply Kubernetes manifests
+          cd 3tier_app_aws_eks_cluster
+          kubectl apply -f backend-deployment.yml
+          kubectl apply -f backend-service.yml
+          kubectl apply -f database-deployment.yml
+          kubectl apply -f database-service.yml
+          kubectl apply -f docker-compose.yml
+          kubectl apply -f frontend-deployment.yml
+          kubectl apply -f frontend-ingress.yml
+          kubectl apply -f frontend-lb-service.yml
+          kubectl apply -f frontend-service.yml
+          kubectl apply -f postgres-pv.yml
+          kubectl apply -f postgres-pvc.yml
+        EOF
