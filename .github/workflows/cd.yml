@@ -50,10 +50,24 @@ jobs:
           git clone https://github.com/Sunithadodda/3tier_app_aws_eks_cluster.git
         EOF
 
+    - name: Setup kubectl
+      run: |
+        ssh -i ~/.ssh/GFS-kp.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+          # Install kubectl if not already installed
+          if ! command -v kubectl &> /dev/null; then
+            echo "Installing kubectl..."
+            curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+            chmod +x ./kubectl
+            sudo mv ./kubectl /usr/local/bin/kubectl
+          else
+            echo "kubectl is already installed."
+          fi
+        EOF
+
     - name: Deploy manifests to EKS
       run: |
         ssh -i ~/.ssh/GFS-kp.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
-          cd 3tier_app_aws_eks_cluster
+          cd 3tier_app_aws_eks_cluster || exit 1  # Change into the cloned directory
           kubectl apply -f backend-deployment.yml
           kubectl apply -f backend-service.yml
           kubectl apply -f database-deployment.yml
@@ -66,3 +80,4 @@ jobs:
           kubectl apply -f postgres-pv.yml
           kubectl apply -f postgres-pvc.yml
         EOF
+
