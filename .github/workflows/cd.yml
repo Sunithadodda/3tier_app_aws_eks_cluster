@@ -44,7 +44,13 @@ jobs:
     - name: Clone the repo
       run: |
         ssh -i ~/.ssh/GFS-kp.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
-          git clone https://github.com/Sunithadodda/3tier_app_aws_eks_cluster.git
+          if [ ! -d "3tier_app_aws_eks_cluster/.git" ]; then
+            git clone https://github.com/Sunithadodda/3tier_app_aws_eks_cluster.git
+          else
+            cd 3tier_app_aws_eks_cluster
+            git fetch origin
+            git checkout main  # or whichever branch you want to track
+          fi
         EOF
 
     - name: Deploy manifests to EKS
