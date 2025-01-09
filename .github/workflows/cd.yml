@@ -45,11 +45,11 @@ jobs:
       run: |
         ssh -i ~/.ssh/GFS-kp.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
           git clone https://github.com/Sunithadodda/3tier_app_aws_eks_cluster.git
-          cd 3tier_app_aws_eks_cluster
         EOF
 
     - name: Deploy manifests to EKS
       run: |
+	cd 3tier_app_aws_eks_cluster
         kubectl apply -f backend-deployment.yml
         kubectl apply -f backend-service.yml
         kubectl apply -f database-deployment.yml
