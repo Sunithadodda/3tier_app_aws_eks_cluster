@@ -49,7 +49,7 @@ jobs:
 
     - name: Deploy manifests to EKS
       run: |
-	cd 3tier_app_aws_eks_cluster
+        cd 3tier_app_aws_eks_cluster
         kubectl apply -f backend-deployment.yml
         kubectl apply -f backend-service.yml
         kubectl apply -f database-deployment.yml
@@ -61,4 +61,3 @@ jobs:
         kubectl apply -f frontend-service.yml
         kubectl apply -f postgres-pv.yml
         kubectl apply -f postgres-pvc.yml
-
