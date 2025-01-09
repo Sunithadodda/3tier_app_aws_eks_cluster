@@ -16,10 +16,10 @@ spec:
     spec:
       containers:
         - name: backend
-          image: dsunitha2/backend-app
+          image: dsunitha2/new_backend
           ports:
             - containerPort: 8080
           env:
             - name: DATABASE_URL
-              value: "postgres://username:password@database-service:5432/yourdbname"
+              value: "postgres://postgres:admin123@database-service:5432/basic3tier"
 

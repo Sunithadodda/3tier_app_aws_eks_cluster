@@ -1,0 +1,48 @@
+version: '3.8'
+services:
+  # PostgreSQL Database Service
+  basic-3tier-postgres:
+    image: postgres:latest
+    container_name: basic-3tier-postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: basic3tier
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - basic3tier
+   # # .NET Core WebAPI Service
+  webapi:
+    image: dsunitha2/new_backend
+    container_name: basic-3tier-api
+    ports:
+      - "7000:80"
+    depends_on:
+      - basic-3tier-postgres
+    environment:
+      ConnectionStrings__Basic3Tier: "Host=basic-3tier-postgres;Port=5432;Database=basic3tier;Username=postgres;Password=admin123"
+    networks:
+      - basic3tier
+  # Frontend Application
+  frontend:
+    image: dsunitha2/new_frontend
+    container_name: basic-3tier-ui
+    ports:
+      - "5000:80"
+    networks:
+      - basic3tier
+    volumes:
+      - ./ui/configs:/usr/share/nginx/html/configs:ro
+    depends_on:
+      - webapi
+      - basic-3tier-postgres
+volumes:
+  postgres_data:
+  pgadmin_data:
+networks:
+  basic3tier:
+    name: basic3tier
+    driver: bridge
