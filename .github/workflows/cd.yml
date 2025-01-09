@@ -1,0 +1,55 @@
+name: CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up AWS CLI
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: 'eu-north-1'
+        
+    - name: Updating the EKS cluster using kubeconfig
+      run: aws eks update-kubeconfig --region eu-north-1 --name ci-cd-licious
+      env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }} 
+
+    - name: Copying the key pair from GitHub secrets to the EC2 instance
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.EC2_KEY_PAIR }}" > ~/.ssh/GFS-kp.pem
+        chmod 400 ~/.ssh/GFS-kp.pem
+
+    - name: Clone the repo
+      run: |
+        ssh -i ~/.ssh/GFS-kp.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
+          git clone https://github.com/Sunithadodda/3tier_app_aws_eks_cluster.git
+          cd 3tier_app_aws_eks_cluster
+        EOF
+
+    - name: Deploy manifests to EKS
+      run: |
+          kubectl apply -f backend-deployment.yml
+	  kubectl apply -f backend-service.yml
+	  kubectl apply -f database-deployment.yml
+	  kubectl apply -f database-service.yml
+	  kubectl apply -f docker-compose.yml
+	  kubectl apply -f frontend-deployment.yml
+	  kubectl apply -f frontend-ingress.yml
+	  kubectl apply -f frontend-lb-service.yml
+	  kubectl apply -f frontend-service.yml
+	  kubectl apply -f postgres-pv.yml
+	  kubectl apply -f postgres-pvc.yml

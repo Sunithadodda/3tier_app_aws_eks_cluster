@@ -1,0 +1,77 @@
+name: Deploy to EKS
+
+on:
+  push:
+    branches:
+      - main  #Trigger deployment on push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Step 2: Set up AWS CLI
+    - name: Set up AWS CLI
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    # Step 3: Install kubectl
+    - name: Install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.21.0/bin/linux/amd64/kubectl"
+        chmod +x ./kubectl
+        sudo mv ./kubectl /usr/local/bin/kubectl
+
+    # Step 4: Update kubeconfig for EKS
+    - name: Update kubeconfig for EKS
+      run: |
+        aws eks update-kubeconfig --name sun-3tier-cluster --region ${{ secrets.AWS_REGION }}
+
+    - name: Set up SSH key
+      run: |
+        # Create the SSH directory
+        mkdir -p ~/.ssh
+        # Add the private key to the SSH agent (from GitHub secret)
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa  # Set appropriate permissions for the private key
+        # Add GitHub to known hosts to prevent host verification issues
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+    # Step 2: Clone the repository using SSH
+    - name: Clone repository
+      run: |
+        git clone git@github.com:Sunithadodda/3tier_app_aws_eks_cluster.git
+       
+
+    # Step 5: Deploy Kubernetes manifests
+    - name: Apply Kubernetes manifests
+      run: |
+        kubectl apply -f k8s/frontend-deployment.yml
+        kubectl apply -f k8s/backend-deployment.yml
+        kubectl apply -f k8s/database-deployment.yml
+        kubectl apply -f k8s/frontend-service.yml
+        kubectl apply -f k8s/backend-service.yml
+        kubectl apply -f k8s/database-service.yml
+        kubectl apply -f k8s/frontend-lb-service.yml
+        kubectl apply -f k8s/postgres-pv.yml
+        kubectl apply -f k8s/postgres-pvc.yml
+
+    # Step 6: Verify the application is running
+    - name: Check Kubernetes pods
+      run: |
+        kubectl get pods
+        kubectl get services
+        kubectl get deployments
+
+    # Optional Step: Wait for the application to be deployed (wait for pods to be ready)
+    - name: Wait for Pods to be Ready
+      run: |
+        kubectl rollout status deployment/your-deployment-name
+        kubectl rollout status deployment/your-other-deployment-name  # Add more deployments if needed
