@@ -36,6 +36,11 @@ jobs:
         echo "${{ secrets.EC2_KEY_PAIR }}" > ~/.ssh/GFS-kp.pem
         chmod 400 ~/.ssh/GFS-kp.pem
 
+    - name: Add EC2 instance to known hosts
+      run: |
+        mkdir -p ~/.ssh
+        ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
+
     - name: Clone the repo
       run: |
         ssh -i ~/.ssh/GFS-kp.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
