@@ -42,7 +42,7 @@ jobs:
         mkdir -p ~/.ssh
         # Add the private key to the SSH agent (from GitHub secret)
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/GFS-kp.pem
-        chmod 600 ~/.ssh/ GFS-kp.pem # Set appropriate permissions for the private key
+        chmod 600 ~/.ssh/GFS-kp.pem # Set appropriate permissions for the private key
         # Add GitHub to known hosts to prevent host verification issues
         ssh-keyscan github.com >> ~/.ssh/known_hosts
 
