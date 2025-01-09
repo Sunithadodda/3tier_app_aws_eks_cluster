@@ -34,6 +34,7 @@ jobs:
       run: |
         aws eks update-kubeconfig --name sun-3tier-cluster --region ${{ secrets.AWS_REGION }}
 
+    # Step 5: Set up SSH key
     - name: Set up SSH key
       run: |
         # Create the SSH directory
@@ -44,13 +45,13 @@ jobs:
         # Add GitHub to known hosts to prevent host verification issues
         ssh-keyscan github.com >> ~/.ssh/known_hosts
 
-    # Step 2: Clone the repository using SSH
+    # Step 6: Clone the repository using SSH
     - name: Clone repository
       run: |
         git clone git@github.com:Sunithadodda/3tier_app_aws_eks_cluster.git
        
 
-    # Step 5: Deploy Kubernetes manifests
+    # Step 7: Deploy Kubernetes manifests
     - name: Apply Kubernetes manifests
       run: |
         kubectl apply -f k8s/frontend-deployment.yml
@@ -63,14 +64,14 @@ jobs:
         kubectl apply -f k8s/postgres-pv.yml
         kubectl apply -f k8s/postgres-pvc.yml
 
-    # Step 6: Verify the application is running
+    # Step 8: Verify the application is running
     - name: Check Kubernetes pods
       run: |
         kubectl get pods
         kubectl get services
         kubectl get deployments
 
-    # Optional Step: Wait for the application to be deployed (wait for pods to be ready)
+    # Step 9: Wait for the application to be deployed (wait for pods to be ready)
     - name: Wait for Pods to be Ready
       run: |
         kubectl rollout status deployment/your-deployment-name
