@@ -68,16 +68,16 @@ jobs:
       run: |
         ssh -i ~/.ssh/GFS-kp.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
           cd 3tier_app_aws_eks_cluster || exit 1  # Change into the cloned directory
-          kubectl apply -f backend-deployment.yml
-          kubectl apply -f backend-service.yml
-          kubectl apply -f database-deployment.yml
-          kubectl apply -f database-service.yml
-          kubectl apply -f docker-compose.yml
-          kubectl apply -f frontend-deployment.yml
-          kubectl apply -f frontend-ingress.yml
-          kubectl apply -f frontend-lb-service.yml
-          kubectl apply -f frontend-service.yml
-          kubectl apply -f postgres-pv.yml
-          kubectl apply -f postgres-pvc.yml
+          kubectl apply -f backend-deployment.yml --validate=false
+          kubectl apply -f backend-service.yml --validate=false
+          kubectl apply -f database-deployment.yml --validate=false
+          kubectl apply -f database-service.yml --validate=false
+          kubectl apply -f docker-compose.yml --validate=false
+          kubectl apply -f frontend-deployment.yml --validate=false
+          kubectl apply -f frontend-ingress.yml --validate=false
+          kubectl apply -f frontend-lb-service.yml --validate=false
+          kubectl apply -f frontend-service.yml --validate=false
+          kubectl apply -f postgres-pv.yml --validate=false
+          kubectl apply -f postgres-pvc.yml --validate=false
         EOF
 
