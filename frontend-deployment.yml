@@ -16,10 +16,10 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: dsunitha2/frontend-app
+          image: dsunitha2/new_frontend
           ports:
             - containerPort: 80
           env:
             - name: BACKEND_URL
-              value: "http://backend-service:8080" # Assuming the backend listens on port 8080
+              value: "http://aa816fd168cb143408448849eb08fff8-1808465688.us-east-2.elb.amazonaws.com" # Assuming the backend listens on port 8080
 
