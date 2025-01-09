@@ -1,4 +1,4 @@
-# 3-Tier Web Application with Docker, Kubernetes, and CI/CD Pipeline
+# Deploy a 3-Tier App on Amazon EKS Cluster
 
 ## Overview
 
