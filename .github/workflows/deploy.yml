@@ -46,6 +46,12 @@ jobs:
         # Add GitHub to known hosts to prevent host verification issues
         ssh-keyscan github.com >> ~/.ssh/known_hosts
 
+        shell: /usr/bin/bash -e {0}
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
     # Step 6: Clone the repository using SSH
     - name: Clone repository
       run: |
