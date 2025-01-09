@@ -42,14 +42,14 @@ jobs:
 
     - name: Deploy manifests to EKS
       run: |
-          kubectl apply -f backend-deployment.yml
-	  kubectl apply -f backend-service.yml
-	  kubectl apply -f database-deployment.yml
-	  kubectl apply -f database-service.yml
-	  kubectl apply -f docker-compose.yml
-	  kubectl apply -f frontend-deployment.yml
-	  kubectl apply -f frontend-ingress.yml
-	  kubectl apply -f frontend-lb-service.yml
-	  kubectl apply -f frontend-service.yml
-	  kubectl apply -f postgres-pv.yml
-	  kubectl apply -f postgres-pvc.yml
+        kubectl apply -f backend-deployment.yml
+        kubectl apply -f backend-service.yml
+        kubectl apply -f database-deployment.yml
+        kubectl apply -f database-service.yml
+        kubectl apply -f docker-compose.yml
+        kubectl apply -f frontend-deployment.yml
+        kubectl apply -f frontend-ingress.yml
+        kubectl apply -f frontend-lb-service.yml
+        kubectl apply -f frontend-service.yml
+        kubectl apply -f postgres-pv.yml
+        kubectl apply -f postgres-pvc.yml
