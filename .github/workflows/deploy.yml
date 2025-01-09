@@ -32,7 +32,7 @@ jobs:
     # Step 4: Update kubeconfig for EKS
     - name: Update kubeconfig for EKS
       run: |
-        aws eks update-kubeconfig --name your-cluster-name --region ${{ secrets.AWS_REGION }}
+        aws eks update-kubeconfig --name sun-3tier-cluster --region ${{ secrets.AWS_REGION }}
 
     # Step 5: Deploy Kubernetes manifests
     - name: Apply Kubernetes manifests
