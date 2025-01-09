@@ -40,15 +40,15 @@ jobs:
         # Create the SSH directory
         mkdir -p ~/.ssh
         # Add the private key to the SSH agent (from GitHub secret)
-        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa  # Set appropriate permissions for the private key
+        echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/GFS-kp.pem
+        chmod 600 ~/.ssh/ GFS-kp.pem # Set appropriate permissions for the private key
         # Add GitHub to known hosts to prevent host verification issues
         ssh-keyscan github.com >> ~/.ssh/known_hosts
 
     # Step 6: Clone the repository using SSH
     - name: Clone repository
       run: |
-        git clone git@github.com:Sunithadodda/3tier_app_aws_eks_cluster.git
+        git clone https://github.com/Sunithadodda/3tier_app_aws_eks_cluster.git
        
 
     # Step 7: Deploy Kubernetes manifests
