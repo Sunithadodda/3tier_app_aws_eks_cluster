@@ -37,9 +37,15 @@ jobs:
     # Step 5: Deploy Kubernetes manifests
     - name: Apply Kubernetes manifests
       run: |
-        kubectl apply -f k8s/deployment.yaml
-        kubectl apply -f k8s/service.yaml
-        kubectl apply -f k8s/ingress.yaml  # If you're using ingress, add the ingress file here.
+        kubectl apply -f k8s/frontend-deployment.yml
+        kubectl apply -f k8s/backend-deployment.yml
+        kubectl apply -f k8s/database-deployment.yml
+        kubectl apply -f k8s/frontend-service.yml
+        kubectl apply -f k8s/backend-service.yml
+        kubectl apply -f k8s/database-service.yml
+        kubectl apply -f k8s/frontend-lb-service.yml
+        kubectl apply -f k8s/postgres-pv.yml
+        kubectl apply -f k8s/postgres-pvc.yml
 
     # Step 6: Verify the application is running
     - name: Check Kubernetes pods
