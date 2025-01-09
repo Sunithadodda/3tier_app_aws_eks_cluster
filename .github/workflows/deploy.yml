@@ -3,7 +3,7 @@ name: Deploy to EKS
 on:
   push:
     branches:
-      - main  #  Trigger deployment on push to the main branch
+      - main  # Trigger deployment on push to the main branch
 
 jobs:
   deploy:
@@ -22,11 +22,14 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: ${{ secrets.AWS_REGION }}
 
-    # Step 3: Set up kubectl
-    - name: Set up kubectl
-      uses: actions/setup-kubectl@v1
+    # Step 3: Install kubectl
+    - name: Install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/v1.21.0/bin/linux/amd64/kubectl"
+        chmod +x ./kubectl
+        sudo mv ./kubectl /usr/local/bin/kubectl
 
-    # Step 4: Update kubeconfig to connect to EKS cluster
+    # Step 4: Update kubeconfig for EKS
     - name: Update kubeconfig for EKS
       run: |
         aws eks update-kubeconfig --name your-cluster-name --region ${{ secrets.AWS_REGION }}
