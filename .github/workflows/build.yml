@@ -44,6 +44,6 @@ jobs:
           # Start SonarQube analysis
           ./.sonar/scanner/dotnet-sonarscanner begin /k:"GFS" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="${{ secrets.SONAR_HOST_URL }}"
           # Build the .NET project
-          dotnet build
+          dotnet build .api/Basic3TierAPI/Basic3TierAPI.sln
           # End SonarQube analysis
           ./.sonar/scanner/dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
