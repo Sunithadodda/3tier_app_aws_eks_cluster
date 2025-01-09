@@ -41,18 +41,18 @@ jobs:
         mkdir -p ~/.ssh
         ssh-keyscan -H ${{ secrets.EC2_PUBLIC_IP }} >> ~/.ssh/known_hosts
 
-    - name: Clone the repo and deploy manifests to EKS
+    - name: Clone the repo
       run: |
         ssh -i ~/.ssh/GFS-kp.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
-          if [ ! -d "3tier_app_aws_eks_cluster/.git" ]; then
-            git clone https://github.com/Sunithadodda/3tier_app_aws_eks_cluster.git
-          else
-            cd 3tier_app_aws_eks_cluster
-            git fetch origin
-            git checkout main  # or whichever branch you want to track
+          if [ -d "3tier_app_aws_eks_cluster" ]; then
+            rm -rf 3tier_app_aws_eks_cluster
           fi
+          git clone https://github.com/Sunithadodda/3tier_app_aws_eks_cluster.git
+        EOF
 
-          # Change into the cloned directory and apply Kubernetes manifests
+    - name: Deploy manifests to EKS
+      run: |
+        ssh -i ~/.ssh/GFS-kp.pem ubuntu@${{ secrets.EC2_PUBLIC_IP }} << 'EOF'
           cd 3tier_app_aws_eks_cluster
           kubectl apply -f backend-deployment.yml
           kubectl apply -f backend-service.yml
