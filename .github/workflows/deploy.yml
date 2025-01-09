@@ -1,0 +1,52 @@
+name: Deploy to EKS
+
+on:
+  push:
+    branches:
+      - main  # Trigger deployment on push to the main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout the code
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    # Step 2: Set up AWS CLI
+    - name: Set up AWS CLI
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ secrets.AWS_REGION }}
+
+    # Step 3: Set up kubectl
+    - name: Set up kubectl
+      uses: actions/setup-kubectl@v1
+
+    # Step 4: Update kubeconfig to connect to EKS cluster
+    - name: Update kubeconfig for EKS
+      run: |
+        aws eks update-kubeconfig --name your-cluster-name --region ${{ secrets.AWS_REGION }}
+
+    # Step 5: Deploy Kubernetes manifests
+    - name: Apply Kubernetes manifests
+      run: |
+        kubectl apply -f k8s/deployment.yaml
+        kubectl apply -f k8s/service.yaml
+        kubectl apply -f k8s/ingress.yaml  # If you're using ingress, add the ingress file here.
+
+    # Step 6: Verify the application is running
+    - name: Check Kubernetes pods
+      run: |
+        kubectl get pods
+        kubectl get services
+        kubectl get deployments
+
+    # Optional Step: Wait for the application to be deployed (wait for pods to be ready)
+    - name: Wait for Pods to be Ready
+      run: |
+        kubectl rollout status deployment/your-deployment-name
+        kubectl rollout status deployment/your-other-deployment-name  # Add more deployments if needed
