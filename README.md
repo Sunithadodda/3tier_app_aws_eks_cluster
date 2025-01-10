@@ -125,4 +125,11 @@ In this part, we implement a CD pipeline to deploy the application to Amazon EKS
           kubectl apply -f postgres-pv.yml --validate=false
           kubectl apply -f postgres-pvc.yml --validate=false
 
+3. Ensure pods are running:
+
+  ```bash
+   kubectl get pods
+   kubectl get services
+
+
    
