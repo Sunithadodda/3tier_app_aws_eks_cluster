@@ -14,12 +14,23 @@ spec:
       labels:
         app: frontend
     spec:
+      volumes:
+        - name: config
+          configMap:
+            name: configmap
+            items:
+              - key: config.json
+                path: config.json
       containers:
         - name: frontend
           image: dsunitha2/new_frontend
           ports:
             - containerPort: 80
-          env:
-            - name: BACKEND_URL
-              value: "http://aa816fd168cb143408448849eb08fff8-1808465688.us-east-2.elb.amazonaws.com" # Assuming the backend listens on port 8080
+          volumeMounts:
+            - name: config
+              mountPath: "/usr/share/nginx/html/configs/"
+              readOnly: true
+#          env:
+#            - name: BACKEND_URL
+#              value: "http://aa816fd168cb143408448849eb08fff8-1808465688.us-east-2.elb.amazonaws.com" # Assuming the backend listens on port 8080
 

@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap
+data:
+  config.json: |
+    {
+      "API_URL": "http://a6f4c67e56a854e6ba0249c28650da9b-933279000.us-east-2.elb.amazonaws.com/"
+    }
