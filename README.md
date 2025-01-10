@@ -131,5 +131,10 @@ In this part, we implement a CD pipeline to deploy the application to Amazon EKS
    kubectl get pods
    kubectl get services
 
+### Github Actions Setup
 
-   
+Set up GitHub Actions by creating a  .github/workflows/ci.yml file with the necessary steps.
+
+1. Building and testing code.
+2. Creating Docker images and pushing to Docker Hub.
+3. Deploying the application to EKS
