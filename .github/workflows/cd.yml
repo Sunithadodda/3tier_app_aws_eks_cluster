@@ -72,12 +72,9 @@ jobs:
           kubectl apply -f backend-service.yml --validate=false
           kubectl apply -f database-deployment.yml --validate=false
           kubectl apply -f database-service.yml --validate=false
-          kubectl apply -f docker-compose.yml --validate=false
           kubectl apply -f frontend-deployment.yml --validate=false
           kubectl apply -f frontend-ingress.yml --validate=false
           kubectl apply -f frontend-lb-service.yml --validate=false
           kubectl apply -f frontend-service.yml --validate=false
-          kubectl apply -f postgres-pv.yml --validate=false
-          kubectl apply -f postgres-pvc.yml --validate=false
         EOF
 
