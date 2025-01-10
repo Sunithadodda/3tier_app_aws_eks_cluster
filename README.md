@@ -90,3 +90,39 @@ In this part, we implement a CD pipeline to deploy the application to Amazon EKS
 
 3. **Verify Application**:
    - Ensure that the application is running successfully on the EKS cluster.
+
+## Setting Up the Project
+
+### Docker Setup
+
+1. Build and run the Docker containers:
+
+   ```bash
+   docker build -t dsunitha/new_frontend .
+   docker build -t dsunitha/new_frontend .
+
+2. Push the Docker images:
+   
+   ```bash
+   docker push dsunitha2/new_backend
+   docker push dsunitha2/new_frontend
+   
+### Kubernetes Setup
+1. Ensure you have a Kubernetes cluster (EKS) running and kubectl is configured.
+
+2. Apply the Kubernetes manifests:
+   
+   ```bash
+   kubectl apply -f backend-deployment.yml --validate=false
+          kubectl apply -f backend-service.yml --validate=false
+          kubectl apply -f database-deployment.yml --validate=false
+          kubectl apply -f database-service.yml --validate=false
+          kubectl apply -f docker-compose.yml --validate=false
+          kubectl apply -f frontend-deployment.yml --validate=false
+          kubectl apply -f frontend-ingress.yml --validate=false
+          kubectl apply -f frontend-lb-service.yml --validate=false
+          kubectl apply -f frontend-service.yml --validate=false
+          kubectl apply -f postgres-pv.yml --validate=false
+          kubectl apply -f postgres-pvc.yml --validate=false
+
+   
