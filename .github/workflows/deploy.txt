@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main  #Trigger deployment on push to the main branch
+      
 
 jobs:
   deploy:
@@ -41,9 +42,15 @@ jobs:
         mkdir -p ~/.ssh
         # Add the private key to the SSH agent (from GitHub secret)
         echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/GFS-kp.pem
-        chmod 600 ~/.ssh/ GFS-kp.pem # Set appropriate permissions for the private key
+        chmod 600 ~/.ssh/GFS-kp.pem # Set appropriate permissions for the private key
         # Add GitHub to known hosts to prevent host verification issues
         ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+        shell: /usr/bin/bash -e {0}
+        env:
+          AWS_REGION: ${{ secrets.AWS_REGION }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
     # Step 6: Clone the repository using SSH
     - name: Clone repository
